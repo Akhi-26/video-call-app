@@ -11,13 +11,13 @@ Agora Video Calling App is a real-time video conferencing application built usin
 
 🚀 Features
 
+Real-time Beauty filter support with adjustable intensity
+
 Real-time video calling using Agora SDK
 
 Join calls by entering a channel name
 
 Host or Audience mode selection
-
-Beauty filter support with adjustable intensity
 
 Mute/Unmute microphone
 
@@ -38,6 +38,19 @@ Agora RTC SDK
 Lottie animations
 
 Provider (State Management)
+
+
+🎨 Real-Time Beauty Feature
+
+The beauty filter feature is implemented using Agora's setBeautyEffectOptions method. When enabled, it applies real-time enhancements such as skin smoothing and lightening.
+
+Slider for Intensity:
+
+A Slider widget allows users to adjust the beauty effect intensity in real-time.
+
+The intensity value updates dynamically, modifying the BeautyOptions applied to the video stream.
+
+This ensures a seamless, real-time beauty effect without affecting performance.
 
 
 
