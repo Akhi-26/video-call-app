@@ -1,20 +1,25 @@
+
 import 'package:flutter/material.dart';
 
+import 'view/homepage.dart';
+
 void main() {
-  runApp(const MainApp());
+  runApp(MyApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Agora Video Call',
+      theme: ThemeData(
+        primarySwatch: Colors.amber,
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.amber, // Set the AppBar background color
         ),
       ),
+      home: HomePage(), // Set the HomePage as the initial screen
     );
   }
 }
