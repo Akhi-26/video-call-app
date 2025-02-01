@@ -3,5 +3,5 @@ class VideoCallModel {
   double beautyIntensity = 50;
   bool isMicMuted = false;
   bool localUserJoined = false;
-  int? remoteUid;
+  List<int> remoteUids = [];
 }

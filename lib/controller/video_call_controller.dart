@@ -14,7 +14,7 @@ class VideoCallController extends ChangeNotifier {
   bool get isMicMuted => _model.isMicMuted;
   double get beautyIntensity => _model.beautyIntensity;
   bool get localUserJoined => _model.localUserJoined;
-  int? get remoteUid => _model.remoteUid;
+  List<int> get remoteUids => _model.remoteUids;
 
   Future<void> initAgora(String channel, ClientRoleType role) async {
     await [Permission.microphone, Permission.camera].request();
@@ -25,12 +25,12 @@ class VideoCallController extends ChangeNotifier {
   }
 
   void _onUserJoined(int remoteUid) {
-    _model.remoteUid = remoteUid;
+    _model.remoteUids.add(remoteUid); // Add new user to the list
     notifyListeners();
   }
 
-  void _onUserOffline() {
-    _model.remoteUid = null;
+  void _onUserOffline(int remoteUid) {
+    _model.remoteUids.remove(remoteUid); // Remove user from the list
     notifyListeners();
   }
 

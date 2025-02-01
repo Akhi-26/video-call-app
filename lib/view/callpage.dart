@@ -78,16 +78,27 @@ class _VideoCallPageState extends State<VideoCallPage> {
               appBar: AppBar(title: Text('Agora Video Call : ${widget.channel}')),
               body: Stack(
                 children: [
-                  Center(
-                      child: controller.remoteUid != null
-                          ? AgoraVideoView(
-                              controller: VideoViewController.remote(
-                                  rtcEngine: controller.engine,
-                                  canvas:
-                                      VideoCanvas(uid: controller.remoteUid!),
-                                  connection: RtcConnection(
-                                      channelId: widget.channel)))
-                          : const Text('Waiting for user...')),
+                  _buildRemoteUserLayout(controller),
+              //     Center(
+              //   child: controller.remoteUids.isNotEmpty
+              //       ? GridView.builder(
+              //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              //             crossAxisCount: 2, // Adjust based on the number of users
+              //             childAspectRatio: 1.0,
+              //           ),
+              //           itemCount: controller.remoteUids.length,
+              //           itemBuilder: (context, index) {
+              //             return AgoraVideoView(
+              //               controller: VideoViewController.remote(
+              //                 rtcEngine: controller.engine,
+              //                 canvas: VideoCanvas(uid: controller.remoteUids[index]),
+              //                 connection: RtcConnection(channelId: widget.channel),
+              //               ),
+              //             );
+              //           },
+              //         )
+              //       : const Text('Waiting for users...'),
+              // ),
                   Align(
                     alignment: Alignment.topLeft,
                     child: SizedBox(
@@ -170,4 +181,107 @@ class _VideoCallPageState extends State<VideoCallPage> {
       ),
     );
   }
+  // Helper method to build the dynamic layout for remote users
+Widget _buildRemoteUserLayout(VideoCallController controller) {
+  final remoteUids = controller.remoteUids;
+
+  if (remoteUids.isEmpty) {
+    return const Center(child: Text('Waiting for users...'));
+  }
+
+  switch (remoteUids.length) {
+    case 1:
+      // Single remote user: full screen
+      return AgoraVideoView(
+        controller: VideoViewController.remote(
+          rtcEngine: controller.engine,
+          canvas: VideoCanvas(uid: remoteUids[0]),
+          connection: RtcConnection(channelId: widget.channel),
+        ),
+      );
+    case 2:
+      // Two remote users: vertical split
+      return Column(
+        children: [
+          Expanded(
+            child: AgoraVideoView(
+              controller: VideoViewController.remote(
+                rtcEngine: controller.engine,
+                canvas: VideoCanvas(uid: remoteUids[0]),
+                connection: RtcConnection(channelId: widget.channel),
+              ),
+            ),
+          ),
+          Expanded(
+            child: AgoraVideoView(
+              controller: VideoViewController.remote(
+                rtcEngine: controller.engine,
+                canvas: VideoCanvas(uid: remoteUids[1]),
+                connection: RtcConnection(channelId: widget.channel),
+              ),
+            ),
+          ),
+        ],
+      );
+    case 3:
+      // Three remote users: top row with 2 users, bottom row with 1 user
+      return Column(
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                  child: AgoraVideoView(
+                    controller: VideoViewController.remote(
+                      rtcEngine: controller.engine,
+                      canvas: VideoCanvas(uid: remoteUids[0]),
+                      connection: RtcConnection(channelId: widget.channel),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: AgoraVideoView(
+                    controller: VideoViewController.remote(
+                      rtcEngine: controller.engine,
+                      canvas: VideoCanvas(uid: remoteUids[1]),
+                      connection: RtcConnection(channelId: widget.channel),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: AgoraVideoView(
+              controller: VideoViewController.remote(
+                rtcEngine: controller.engine,
+                canvas: VideoCanvas(uid: remoteUids[2]),
+                connection: RtcConnection(channelId: widget.channel),
+              ),
+            ),
+          ),
+        ],
+      );
+    default:
+      // For 4 or more users: use a grid-like layout
+      return GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, // Adjust as needed
+          childAspectRatio: 1.0,
+        ),
+        itemCount: remoteUids.length,
+        itemBuilder: (context, index) {
+          return AgoraVideoView(
+            controller: VideoViewController.remote(
+              rtcEngine: controller.engine,
+              canvas: VideoCanvas(uid: remoteUids[index]),
+              connection: RtcConnection(channelId: widget.channel),
+            ),
+          );
+        },
+      );
+  }
 }
+
+}
+
